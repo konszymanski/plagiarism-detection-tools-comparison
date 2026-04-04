@@ -65,4 +65,3 @@ This project provides a qualitative and quantitative evaluation of four widely u
 * **JPlag & MOSS:** Demonstrated the highest resilience against false positives but showed vulnerability to structural obfuscation.
 * **copydetect:** Offered exceptional robustness against obfuscation attacks, though it requires careful calibration to manage false-positive rates.
 * **DOLOS:** Distinguished by superior cluster-based visualizations and network graphs, making it the most effective tool for identifying complex collusion groups.
-```
