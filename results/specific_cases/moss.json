@@ -1,0 +1,23 @@
+{
+    "L0": [
+        0.94
+    ],
+    "L1_renaming": [
+        0.94
+    ],
+    "L1_renaming_shuffling": [
+        0.73
+    ],
+    "L2_if_else_reorder": [
+        0.86
+    ],
+    "L2_if_inversion": [
+        0.44
+    ],
+    "empty_submissioon": [
+        0.81
+    ],
+    "student_61_18": [
+        0.74
+    ]
+}
