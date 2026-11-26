@@ -1,7 +1,9 @@
 copydetect
 pandas
+matplotlib
 seaborn
 mosspy==1.0.9
 beautifulsoup4==4.12.3
+lxml
 requests==2.31.0
-dotenv
+python-dotenv

@@ -1,67 +1,76 @@
-# Plagiarism Detection Tools Comparison — CSEDU 2026
+# Plagiarism Detection Tools Comparison (CSEDU 2026)
 
-This repository contains the source code, datasets, and experimental scripts used for the research paper: **"Comparative Analysis of Non-Commercial Plagiarism Detectors for Computer Science Education"**. The paper was accepted to the **18th International Conference on Computer Supported Education (CSEDU 2026)** in Benidorm, Spain (https://csedu.scitevents.org/Home.aspx).
+This repository contains the code, data and experiment scripts for the paper **"Comparative Analysis of Non-Commercial Plagiarism Detectors for Computer Science Education"**, presented at the 18th International Conference on Computer Supported Education ([CSEDU 2026](https://csedu.scitevents.org/Home.aspx)), Benidorm, Spain.
 
----
+**Authors:** Paulina Gacek, Bartosz Gdowski, Konrad Szymański, Wojciech Żmuda
+(AGH University of Krakow, Faculty of Electrical Engineering, Automatics, IT and Biomedical Engineering)
 
-### **Authors**
-* Paulina Gacek
-* Bartosz Gdowski
-* Konrad Szymański
-* Wojciech Żmuda
+Original repository (private): `sprawdzarka-aisd/plagiarism-detection-tools-comparison`
 
-(*AGH University of Krakow, Faculty of Electrical Engineering, Automatics, IT and Biomedical Engineering*)
+## My contribution
 
----
-### **Original respository (private)**
+I did a detailed technical analysis of the Dolos detector and wrote automation scripts for generating the test data. I am also a co-author of the paper.
 
-https://github.com/sprawdzarka-aisd/plagiarism-detection-tools-comparison
+## About the research
 
----
+We compared four non-commercial plagiarism detectors: **MOSS, JPlag, Dolos** and **copydetect**, on three datasets:
 
-### **Setup & Installation**
+1. **Dataset A (academic corpus):** 102 real student submissions, used to check how well each tool ignores boilerplate code.
+2. **Dataset B (algorithmic discrimination):** 252 LeetCode problems with different correct solutions to the same task, used to measure false positives.
+3. **Dataset C (obfuscation resilience):** synthetic pairs with four levels of obfuscation (formatting, lexical, structural and semantic changes).
 
-#### **1. Python Environment**
+**Key findings:**
+- **JPlag and MOSS** had the fewest false positives but were vulnerable to structural obfuscation.
+- **copydetect** was the most robust against obfuscation, but its threshold needs careful calibration to avoid false positives.
+- **Dolos** has the best cluster visualisations, which makes it the most useful tool for finding groups of students who worked together.
+
+## Repository structure
+
+```
+data/solutions/all_students     Dataset A
+data/boilerplate                boilerplate code given to students (used as MOSS base file)
+data_leetcode/                  Dataset B, one folder per problem
+data/solutions/specific_cases   Dataset C
+scripts/                        one runner per tool + main.py and charts
+results/                        raw similarity scores and charts
+```
+
+## Setup
+
+### 1. Python
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
-pip3 install -r requirements.txt
+pip install -r requirements.txt
+cp .env.example .env    # then fill in the values
 ```
 
-#### **2. Dolos Setup**
-Dolos requires a specific version of Node.js (v20). Newer versions may not be compatible. For OS-specific instructions, visit the [official download page](https://nodejs.org/en/download).
+### 2. MOSS
+MOSS needs a free user ID: send an e-mail as described on the [MOSS website](https://theory.stanford.edu/~aiken/moss/) and put the ID in `.env` as `MOSSID`.
 
+### 3. JPlag
+JPlag needs Java 21 or newer. Download `jplag-x.y.z-jar-with-dependencies.jar` from the [JPlag releases](https://github.com/jplag/JPlag/releases), save it as `tools/jplag.jar` (or set `JPLAG_JAR` in `.env`).
+
+### 4. Dolos
+Dolos needs Node.js 20:
 ```bash
-# Install and use the correct Node.js version via nvm
 nvm install 20
 nvm use 20
-
-# Install Dolos globally
 npm install -g @dodona/dolos
-
-# Verify the installation
 dolos --version
 ```
-*If you encounter issues, please refer to the [Dolos installation guide](https://dolos.ugent.be/docs/installation.html).*
+If something goes wrong, see the [Dolos installation guide](https://dolos.ugent.be/docs/installation.html).
 
----
+## Running
 
-### **Execution**
-To run the main comparison script and reproduce the analysis:
 ```bash
 python3 scripts/main.py
 ```
 
----
+Choose which tools to run in the `tool_to_runner` dictionary in `scripts/main.py`. Each tool returns pairwise similarity scores in the range 0.0–1.0. Results that already exist in `results/` are not generated again; delete a file to recompute it.
 
-### **About the Research**
-This project provides a qualitative and quantitative evaluation of four widely used non-commercial detection systems: **MOSS, JPlag, DOLOS,** and **copydetect**. Our analysis was conducted using three distinct experimental protocols:
+## Results
 
-1.  **Dataset A (Academic Corpus):** 102 genuine student submissions used to measure boilerplate filtering efficiency.
-2.  **Dataset B (Algorithmic Discrimination):** 252 LeetCode problems (comparing naive vs. optimal solutions) to establish false-positive rates.
-3.  **Dataset C (Obfuscation Resilience):** A synthetic dataset featuring 4 levels of adversarial transformations (Formatting, Lexical, Structural, and Semantic).
-
-**Key Findings:**
-* **JPlag & MOSS:** Demonstrated the highest resilience against false positives but showed vulnerability to structural obfuscation.
-* **copydetect:** Offered exceptional robustness against obfuscation attacks, though it requires careful calibration to manage false-positive rates.
-* **DOLOS:** Distinguished by superior cluster-based visualizations and network graphs, making it the most effective tool for identifying complex collusion groups.
+| Dataset A: student submissions | Dataset B: LeetCode | Dataset C: obfuscation |
+| --- | --- | --- |
+| ![students](results/students.png) | ![leetcode](results/leetcode.png) | ![specific cases](results/specific_cases.png) |
