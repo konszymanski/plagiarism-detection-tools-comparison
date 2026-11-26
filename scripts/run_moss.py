@@ -25,7 +25,7 @@ def run_moss(task_path: str, userid: int, base_file = "") -> List[float]:
     try:
         url = m.send()
         print(f"MOSS URL: {url}")
-        with open("results/all_students/moss_urls_uhuhu.txt", "a") as file:
+        with open("results/all_students/moss_urls.txt", "a") as file:
             file.write(f"{url}\n")
 
         response = requests.get(url)
@@ -36,7 +36,7 @@ def run_moss(task_path: str, userid: int, base_file = "") -> List[float]:
         # Find the main table
         main_table = soup.find('table')
         if not main_table:
-            return "No table found."
+            return []
 
         # Find all rows directly under this table
         rows = main_table.find_all('tr', recursive=False)
